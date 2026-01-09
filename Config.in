@@ -1,40 +1,63 @@
-# SPDX-License-Identifier: GPL-2.0-only
-#
-# Copyright (C) 2006-2013 OpenWrt.org
+# 硬件平台设置
+CONFIG_TARGET_ramips=y
+CONFIG_TARGET_ramips_mt7621=y
+CONFIG_TARGET_ramips_mt7621_DEVICE_phicomm_k2p=y
 
-mainmenu "OpenWrt Configuration"
+# 基础语言包（中文）
+CONFIG_LUCI_LANG_zh_Hans=y
 
-config MODULES
-	modules
-	bool
-	default y
+# 核心 Web 管理界面
+CONFIG_PACKAGE_luci=y
+CONFIG_PACKAGE_luci-base=y
+CONFIG_PACKAGE_luci-i18n-base-zh-cn=y
 
-config HAVE_DOT_CONFIG
-	bool
-	default y
+# 1. 科学上网 (OpenClash)
+CONFIG_PACKAGE_luci-app-openclash=y
+CONFIG_PACKAGE_luci-i18n-openclash-zh-cn=y
 
-HOST_OS := $(shell, uname)
+# 2. 去广告 (Adbyby Plus+)
+CONFIG_PACKAGE_luci-app-adbyby-plus=y
+CONFIG_PACKAGE_luci-i18n-adbyby-plus-zh-cn=y
 
-config HOST_OS_LINUX
-	def_bool $(shell, ./config/check-uname.sh Linux)
+# 3. DNS 防污染 & 加速 (SmartDNS)
+CONFIG_PACKAGE_luci-app-smartdns=y
+CONFIG_PACKAGE_luci-i18n-smartdns-zh-cn=y
 
-config HOST_OS_MACOS
-	def_bool $(shell, ./config/check-uname.sh Darwin)
+# 4. 网络加速 (Turbo ACC: BBR, DNS加速, 流量分载)
+CONFIG_PACKAGE_luci-app-turboacc=y
+CONFIG_PACKAGE_luci-app-turboacc_INCLUDE_BBR-BW=y
+CONFIG_PACKAGE_luci-app-turboacc_INCLUDE_PDNSD=y
+CONFIG_PACKAGE_luci-app-turboacc_INCLUDE_SHORTCUT_FE=y
+CONFIG_PACKAGE_luci-i18n-turboacc-zh-cn=y
 
-source "target/Config.in"
+# 5. 状态监控 (Netdata & 实时流量)
+CONFIG_PACKAGE_luci-app-netdata=y
+CONFIG_PACKAGE_luci-i18n-netdata-zh-cn=y
+CONFIG_PACKAGE_luci-app-nlbwmon=y
+CONFIG_PACKAGE_luci-i18n-nlbwmon-zh-cn=y
 
-source "config/Config-images.in"
+# 6. 网页终端 (TTYD)
+CONFIG_PACKAGE_luci-app-ttyd=y
+CONFIG_PACKAGE_luci-i18n-ttyd-zh-cn=y
 
-source "config/Config-build.in"
+# 7. 主题 (Argon 旗舰主题)
+CONFIG_PACKAGE_luci-theme-argon=y
+CONFIG_PACKAGE_luci-app-argon-config=y
+CONFIG_PACKAGE_luci-i18n-argon-config-zh-cn=y
 
-source "config/Config-devel.in"
+# 8. 其他常用工具
+CONFIG_PACKAGE_luci-app-upnp=y
+CONFIG_PACKAGE_luci-i18n-upnp-zh-cn=y
+CONFIG_PACKAGE_luci-app-wol=y
+CONFIG_PACKAGE_luci-i18n-wol-zh-cn=y
+CONFIG_PACKAGE_luci-app-autoreboot=y
+CONFIG_PACKAGE_luci-i18n-autoreboot-zh-cn=y
 
-source "toolchain/Config.in"
+# 针对 512MB RAM 的额外增强
+CONFIG_PACKAGE_zram-hzb=y
+CONFIG_PACKAGE_kmod-zram=y
 
-source "target/imagebuilder/Config.in"
-
-source "target/sdk/Config.in"
-
-source "target/toolchain/Config.in"
-
-source "tmp/.config-package.in"
+# 针对 32MB Flash 的完整驱动支持 (不压缩驱动以保证稳定性)
+CONFIG_PACKAGE_kmod-mt7603=y
+CONFIG_PACKAGE_kmod-mt7615e=y
+CONFIG_PACKAGE_wpad-openssl=y
